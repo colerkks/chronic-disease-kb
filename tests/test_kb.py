@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, '.')
 
 from kb.knowledge_base import knowledge_base, DocumentChunker
-from data.sample_knowledge import DIABETES_TYPE2_KNOWLEDGE
+from data.sample_knowledge import DIABETES_TYPE2_KNOWLEDGE, create_disease_knowledge_objects
 
 
 class TestKnowledgeBase:
@@ -78,6 +78,17 @@ class TestSampleData:
         assert "name" in diabetes
         assert "overview" in diabetes
         assert "symptoms" in diabetes
+
+    def test_knowledge_objects_include_diagnosis_or_prognosis(self):
+        """Ensure enriched knowledge objects retain diagnosis or prognosis data"""
+        knowledge_objects = create_disease_knowledge_objects()
+        assert len(knowledge_objects) > 0
+
+        has_enriched = any(
+            bool(knowledge.diagnosis) or bool(knowledge.prognosis)
+            for knowledge in knowledge_objects
+        )
+        assert has_enriched
 
 
 if __name__ == "__main__":
