@@ -87,6 +87,15 @@ class BloodGlucose(BaseModel):
                 return "prediabetes"
             else:
                 return "diabetes"
+        if self.context in {"postprandial", "random"}:
+            if self.value < 70:
+                return "hypoglycemia"
+            elif self.value <= 140:
+                return "normal"
+            elif self.value <= 199:
+                return "prediabetes"
+            else:
+                return "diabetes"
         return "unknown"
 
 

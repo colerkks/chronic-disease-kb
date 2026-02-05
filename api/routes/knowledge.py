@@ -7,6 +7,7 @@ from typing import List, Optional, Dict, Any
 
 from kb.knowledge_base import knowledge_base
 from models.disease import DiseaseKnowledge
+from models.knowledge import KnowledgeCreate
 
 router = APIRouter()
 
@@ -17,7 +18,16 @@ async def get_knowledge_stats():
     return {
         "total_documents": knowledge_base.count_documents(),
         "diseases_covered": knowledge_base.get_all_diseases(),
-        "categories": ["symptoms", "treatment", "prevention", "lifestyle", "general"]
+        "categories": [
+            "symptoms",
+            "treatment",
+            "prevention",
+            "lifestyle",
+            "complications",
+            "diagnosis",
+            "comprehensive",
+            "general"
+        ]
     }
 
 
@@ -88,10 +98,7 @@ async def get_disease_knowledge(disease_name: str):
 
 @router.post("/knowledge/add", status_code=status.HTTP_201_CREATED)
 async def add_knowledge(
-    content: str,
-    disease: str,
-    category: str = "general",
-    metadata: Optional[Dict[str, Any]] = None
+    payload: KnowledgeCreate
 ):
     """
     Add knowledge to knowledge base
@@ -108,10 +115,10 @@ async def add_knowledge(
     """
     try:
         doc_id = knowledge_base.add_knowledge(
-            content=content,
-            disease=disease,
-            category=category,
-            metadata=metadata or {}
+            content=payload.content,
+            disease=payload.disease,
+            category=payload.category,
+            metadata=payload.metadata or {}
         )
         
         return {
@@ -155,6 +162,7 @@ async def get_knowledge_categories():
             {"id": "lifestyle", "name": "生活方式", "description": "饮食、运动、生活习惯"},
             {"id": "complications", "name": "并发症", "description": "可能并发症"},
             {"id": "diagnosis", "name": "诊断", "description": "诊断方法和标准"},
+            {"id": "comprehensive", "name": "综合", "description": "综合知识条目"},
             {"id": "general", "name": "一般信息", "description": "一般疾病信息"}
         ]
     }

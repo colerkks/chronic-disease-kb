@@ -192,13 +192,111 @@ ARTHRITIS_KNOWLEDGE = [
     }
 ]
 
+CKD_KNOWLEDGE = [
+    {
+        "name": "慢性肾病（CKD）",
+        "category": DiseaseCategory.OTHER,
+        "overview": """慢性肾病是指肾脏结构或功能异常持续超过3个月，
+        表现为肾小球滤过率下降、蛋白尿或影像学异常。CKD可进展至终末期肾病。""",
+        "symptoms": {
+            "early": ["疲劳", "食欲减退", "夜尿增多", "轻度浮肿"],
+            "progressive": ["水肿加重", "恶心呕吐", "皮肤瘙痒", "呼吸困难"],
+            "advanced": ["严重贫血", "少尿或无尿", "意识改变", "心律失常"]
+        },
+        "causes": ["糖尿病肾病", "高血压肾损害", "肾小球肾炎", "多囊肾", "长期药物损伤"],
+        "risk_factors": {
+            "modifiable": ["血糖控制不佳", "血压控制不佳", "高盐饮食", "吸烟"],
+            "non_modifiable": ["年龄增长", "家族史", "既往肾损伤"]
+        },
+        "diagnosis": {
+            "labs": ["eGFR<60 ml/min/1.73m²持续≥3个月", "尿蛋白/尿白蛋白升高", "肌酐升高"],
+            "imaging": ["肾脏超声提示肾脏萎缩或结构异常"],
+            "staging": ["KDIGO分期：G1-G5结合A1-A3蛋白尿分级"]
+        },
+        "treatments": {
+            "lifestyle": ["限盐饮食", "蛋白摄入适度控制", "戒烟", "规律运动"],
+            "medications": ["ACE抑制剂/ARB", "SGLT2抑制剂（合并糖尿病）", "纠正贫血与电解质紊乱"],
+            "renal_replacement": ["血液透析", "腹膜透析", "肾移植"]
+        },
+        "complications": ["贫血", "矿物质骨病", "心血管事件", "电解质紊乱"],
+        "prevention": ["控制血糖和血压", "避免肾毒性药物", "定期筛查尿蛋白与肾功能"],
+        "prognosis": "早期干预可延缓进展，晚期需肾替代治疗。",
+        "sources": ["KDIGO Guidelines 2024", "中国慢性肾病管理指南"]
+    }
+]
+
+DYSLIPIDEMIA_KNOWLEDGE = [
+    {
+        "name": "血脂异常",
+        "category": DiseaseCategory.CARDIOVASCULAR,
+        "overview": """血脂异常是指血浆胆固醇或甘油三酯水平异常升高，
+        或高密度脂蛋白胆固醇降低，是动脉粥样硬化的重要危险因素。""",
+        "symptoms": {
+            "common": ["多数无症状"],
+            "severe": ["黄色瘤", "脂血症性胰腺炎（极高甘油三酯）"]
+        },
+        "causes": ["遗传性高脂血症", "高脂饮食", "肥胖", "糖尿病", "甲状腺功能减退"],
+        "risk_factors": {
+            "modifiable": ["高脂饮食", "缺乏运动", "超重/肥胖", "吸烟"],
+            "non_modifiable": ["家族史", "年龄增长"]
+        },
+        "diagnosis": {
+            "labs": ["空腹血脂谱（TC, LDL-C, HDL-C, TG）"],
+            "criteria": ["LDL-C升高或HDL-C降低", "TG升高≥1.7 mmol/L"],
+            "risk": ["ASCVD风险评估决定治疗强度"]
+        },
+        "treatments": {
+            "lifestyle": ["低饱和脂肪饮食", "增加膳食纤维", "规律有氧运动", "减重"],
+            "medications": ["他汀类药物", "依折麦布", "PCSK9抑制剂", "贝特类（高TG）"]
+        },
+        "complications": ["动脉粥样硬化", "心肌梗死", "中风", "胰腺炎"],
+        "prevention": ["健康饮食", "规律运动", "控制体重", "定期血脂检查"],
+        "prognosis": "长期坚持生活方式干预与降脂治疗可显著降低心血管风险。",
+        "sources": ["ESC/EAS Dyslipidemia Guidelines 2023", "中国血脂管理指南"]
+    }
+]
+
+STROKE_KNOWLEDGE = [
+    {
+        "name": "脑卒中",
+        "category": DiseaseCategory.NEUROLOGICAL,
+        "overview": """脑卒中是由于脑血管阻塞或破裂导致局灶性神经功能缺损。
+        包括缺血性脑卒中和出血性脑卒中，是成人致残和死亡的主要原因之一。""",
+        "symptoms": {
+            "common": ["突发偏侧无力或麻木", "言语不清", "口角歪斜", "视物模糊"],
+            "severe": ["意识障碍", "剧烈头痛（出血性）", "吞咽困难"]
+        },
+        "causes": ["动脉粥样硬化", "心源性栓塞", "小血管病变", "高血压脑出血"],
+        "risk_factors": {
+            "modifiable": ["高血压", "糖尿病", "血脂异常", "吸烟", "房颤"],
+            "non_modifiable": ["年龄增长", "家族史", "既往卒中史"]
+        },
+        "diagnosis": {
+            "imaging": ["头颅CT/MRI确诊出血或缺血", "血管成像评估狭窄/闭塞"],
+            "clinical": ["FAST评估", "NIHSS评分"]
+        },
+        "treatments": {
+            "acute": ["静脉溶栓（时间窗内）", "取栓治疗", "控制血压和血糖"],
+            "secondary": ["抗血小板/抗凝治疗", "他汀类药物", "危险因素管理"],
+            "rehabilitation": ["早期康复训练", "吞咽与语言训练"]
+        },
+        "complications": ["偏瘫", "失语", "认知障碍", "抑郁", "肺部感染"],
+        "prevention": ["控制血压血脂", "戒烟限酒", "规律运动", "抗凝或抗血小板治疗"],
+        "prognosis": "早期识别与治疗可改善预后，长期康复有助于功能恢复。",
+        "sources": ["AHA/ASA Stroke Guidelines 2024", "中国脑卒中防治指南"]
+    }
+]
+
 ALL_KNOWLEDGE = (
     DIABETES_TYPE2_KNOWLEDGE + 
     HYPERTENSION_KNOWLEDGE + 
     ASTHMA_KNOWLEDGE + 
     HEART_DISEASE_KNOWLEDGE + 
     COPD_KNOWLEDGE + 
-    ARTHRITIS_KNOWLEDGE
+    ARTHRITIS_KNOWLEDGE +
+    CKD_KNOWLEDGE +
+    DYSLIPIDEMIA_KNOWLEDGE +
+    STROKE_KNOWLEDGE
 )
 
 def get_sample_knowledge():
@@ -221,9 +319,11 @@ def create_disease_knowledge_objects():
             symptoms=data.get("symptoms", {}),
             causes=data.get("causes", []),
             risk_factors=data.get("risk_factors", {}),
+            diagnosis=data.get("diagnosis", {}),
             treatments=data.get("treatments", {}),
             complications=data.get("complications", []),
             prevention=data.get("prevention", []),
+            prognosis=data.get("prognosis"),
             sources=data.get("sources", []),
             last_updated=datetime.now()
         )
