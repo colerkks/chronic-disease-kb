@@ -131,6 +131,12 @@ class TestMetricModels:
         bg_high = BloodGlucose(value=140, context="fasting")
         assert bg_high.is_normal() == False
         assert bg_high.get_category() == "diabetes"
+
+        bg_post = BloodGlucose(value=160, context="postprandial")
+        assert bg_post.get_category() == "prediabetes"
+
+        bg_random = BloodGlucose(value=220, context="random")
+        assert bg_random.get_category() == "diabetes"
     
     def test_health_metric(self):
         """Test health metric model"""
