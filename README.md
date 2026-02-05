@@ -1,5 +1,7 @@
 # Chronic Disease Management Knowledge Base
 
+> 中文版文档请见：[README.zh-CN.md](README.zh-CN.md)。
+
 An AI-powered knowledge base system for chronic disease management with intelligent agents.
 
 ## 🌟 Features
