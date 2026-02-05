@@ -151,6 +151,9 @@ class KnowledgeBase:
         
         if knowledge.risk_factors:
             content_parts.append(f"风险因素: {knowledge.risk_factors}")
+
+        if knowledge.diagnosis:
+            content_parts.append(f"诊断: {knowledge.diagnosis}")
         
         if knowledge.treatments:
             content_parts.append(f"治疗: {knowledge.treatments}")
@@ -160,6 +163,9 @@ class KnowledgeBase:
         
         if knowledge.prevention:
             content_parts.append(f"预防: {', '.join(knowledge.prevention)}")
+
+        if knowledge.prognosis:
+            content_parts.append(f"预后: {knowledge.prognosis}")
         
         content = "\n\n".join(content_parts)
         
