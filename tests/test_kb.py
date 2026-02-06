@@ -66,6 +66,21 @@ class TestKnowledgeBase:
         diseases = knowledge_base.get_all_diseases()
         assert isinstance(diseases, list)
 
+    def test_metadata_summary(self):
+        """Test metadata summary aggregation"""
+        knowledge_base.add_knowledge(
+            content="Sample content for summary aggregation.",
+            disease="summary_test",
+            category="diagnosis",
+            metadata={"source": "unit_test"}
+        )
+
+        summary = knowledge_base.get_metadata_summary()
+        assert "diseases" in summary
+        assert "categories" in summary
+        assert summary["diseases"].get("summary_test", 0) >= 1
+        assert summary["categories"].get("diagnosis", 0) >= 1
+
 
 class TestSampleData:
     """Test sample data loading"""

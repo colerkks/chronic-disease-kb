@@ -15,9 +15,12 @@ router = APIRouter()
 @router.get("/knowledge/stats")
 async def get_knowledge_stats():
     """Get knowledge base statistics"""
+    metadata_summary = knowledge_base.get_metadata_summary()
     return {
         "total_documents": knowledge_base.count_documents(),
         "diseases_covered": knowledge_base.get_all_diseases(),
+        "disease_counts": metadata_summary["diseases"],
+        "category_counts": metadata_summary["categories"],
         "categories": [
             "symptoms",
             "treatment",

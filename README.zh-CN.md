@@ -72,6 +72,12 @@ curl -X POST "http://localhost:8000/api/v1/query" \
   }'
 ```
 
+### 获取知识库统计
+
+```bash
+curl "http://localhost:8000/api/v1/knowledge/stats"
+```
+
 ### 创建患者
 
 ```bash
