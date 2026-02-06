@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, '.')
 
 from kb.knowledge_base import knowledge_base, DocumentChunker
-from data.sample_knowledge import DIABETES_TYPE2_KNOWLEDGE
+from data.sample_knowledge import DIABETES_TYPE2_KNOWLEDGE, create_disease_knowledge_objects
 
 
 class TestKnowledgeBase:
@@ -66,6 +66,21 @@ class TestKnowledgeBase:
         diseases = knowledge_base.get_all_diseases()
         assert isinstance(diseases, list)
 
+    def test_metadata_summary(self):
+        """Test metadata summary aggregation"""
+        knowledge_base.add_knowledge(
+            content="Sample content for summary aggregation.",
+            disease="summary_test",
+            category="diagnosis",
+            metadata={"source": "unit_test"}
+        )
+
+        summary = knowledge_base.get_metadata_summary()
+        assert "diseases" in summary
+        assert "categories" in summary
+        assert summary["diseases"].get("summary_test", 0) >= 1
+        assert summary["categories"].get("diagnosis", 0) >= 1
+
 
 class TestSampleData:
     """Test sample data loading"""
@@ -78,6 +93,17 @@ class TestSampleData:
         assert "name" in diabetes
         assert "overview" in diabetes
         assert "symptoms" in diabetes
+
+    def test_knowledge_objects_include_diagnosis_or_prognosis(self):
+        """Ensure enriched knowledge objects retain diagnosis or prognosis data"""
+        knowledge_objects = create_disease_knowledge_objects()
+        assert len(knowledge_objects) > 0
+
+        has_enriched = any(
+            bool(knowledge.diagnosis) or bool(knowledge.prognosis)
+            for knowledge in knowledge_objects
+        )
+        assert has_enriched
 
 
 if __name__ == "__main__":

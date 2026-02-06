@@ -151,6 +151,9 @@ class KnowledgeBase:
         
         if knowledge.risk_factors:
             content_parts.append(f"风险因素: {knowledge.risk_factors}")
+
+        if knowledge.diagnosis:
+            content_parts.append(f"诊断: {knowledge.diagnosis}")
         
         if knowledge.treatments:
             content_parts.append(f"治疗: {knowledge.treatments}")
@@ -160,6 +163,9 @@ class KnowledgeBase:
         
         if knowledge.prevention:
             content_parts.append(f"预防: {', '.join(knowledge.prevention)}")
+
+        if knowledge.prognosis:
+            content_parts.append(f"预后: {knowledge.prognosis}")
         
         content = "\n\n".join(content_parts)
         
@@ -248,6 +254,27 @@ class KnowledgeBase:
                 diseases.add(doc['metadata']['disease'])
         
         return sorted(list(diseases))
+
+    def get_metadata_summary(self) -> Dict[str, Dict[str, int]]:
+        """Summarize document counts by disease and category"""
+        all_docs = self.vector_store.get_all_documents()
+        disease_counts: Dict[str, int] = {}
+        category_counts: Dict[str, int] = {}
+
+        for doc in all_docs:
+            metadata = doc.get("metadata", {})
+            disease = metadata.get("disease")
+            category = metadata.get("category")
+
+            if disease:
+                disease_counts[disease] = disease_counts.get(disease, 0) + 1
+            if category:
+                category_counts[category] = category_counts.get(category, 0) + 1
+
+        return {
+            "diseases": dict(sorted(disease_counts.items())),
+            "categories": dict(sorted(category_counts.items()))
+        }
     
     def count_documents(self, disease: Optional[str] = None) -> int:
         """Count documents in knowledge base"""
