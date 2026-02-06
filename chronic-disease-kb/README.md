@@ -231,26 +231,6 @@ pytest --cov=.
 
 ---
 
-## 💡 使用技巧
-
-### 1. ultrawork模式
-在查询时添加`ultrawork`或`ulw`关键词，系统自动：
-- 🔍 深度理解查询意图
-- 📚 检索相关医疗知识
-- 🧠 生成综合回答
-- 💡 提供个性化建议
-
-### 2. 患者上下文感知
-提供 `patient_id` 可获得：
-- 🎯 基于病史的个性化回答
-- 💊 针对性的用药提醒
-- 📊 相关的健康指标分析
-
-### 3. 多语言支持
-系统支持中文和英文医疗查询
-
----
-
 ## 🛠️ 技术栈
 
 | 技术 | 用途 | 版本 |
@@ -263,26 +243,6 @@ pytest --cov=.
 | **Pydantic** | 数据验证 | 2.5+ |
 | **Sentence-Transformers** | 文本嵌入 | 2.2+ |
 | **Pytest** | 测试框架 | 7.4+ |
-
----
-
-## 🚀 部署到GitHub
-
-使用系统级GitHub推送插件：
-
-```bash
-# 在项目目录中运行
-/github-push
-
-# 或简写
-/gh-push
-```
-
-插件会自动：
-- 🔍 检测Git仓库信息
-- 🔗 配置GitHub远程仓库
-- 🌐 打开GitHub创建页面
-- ⬆️ 完成代码推送
 
 ---
 
@@ -300,6 +260,12 @@ pytest --cov=.
 
 MIT License - 详见 [LICENSE](LICENSE) 文件
 
+## ©️ 版权归属
+
+Copyright (c) 2026 colerkks. All rights reserved.
+
+项目代码、文档与相关内容的著作权归 `colerkks` 所有。
+
 ---
 
 ## 📞 支持与反馈
@@ -310,7 +276,7 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 **版本**: 1.0.0  
 **创建时间**: 2026-02-04  
-**作者**: AI Assistant  
+**作者**: colerkks  
 **状态**: ✅ 生产就绪
 
 🎉 **系统已就绪，可以立即开始使用！**
