@@ -1,0 +1,80 @@
+version: "1.0.0"
+updated_at: "2026-02-13"
+owner: "medical-governance"
+
+sources:
+  - source_id: "ada-2026-soc"
+    organization: "American Diabetes Association"
+    document_title: "Standards of Care in Diabetes—2026"
+    document_version: "2026.1"
+    publication_date: "2025-12-08"
+    url: "https://diabetesjournals.org/care/article/49/Supplement_1/S6/163930"
+    evidence_level: "GRADE_HIGH"
+    recommendation_strength: "STRONG"
+    disease_scopes:
+      - "diabetes_type1"
+      - "diabetes_type2"
+    review_due_date: "2026-12-31"
+
+  - source_id: "nice-ng136"
+    organization: "National Institute for Health and Care Excellence"
+    document_title: "Hypertension in adults: diagnosis and management"
+    document_version: "NG136"
+    publication_date: "2019-08-28"
+    url: "https://www.nice.org.uk/guidance/ng136"
+    evidence_level: "GRADE_MODERATE"
+    recommendation_strength: "STRONG"
+    disease_scopes:
+      - "hypertension"
+    review_due_date: "2026-09-30"
+
+  - source_id: "gold-2026-report"
+    organization: "Global Initiative for Chronic Obstructive Lung Disease"
+    document_title: "Global Strategy for Prevention, Diagnosis and Management of COPD: 2026 Report"
+    document_version: "2026"
+    publication_date: "2025-11-10"
+    url: "https://goldcopd.org/2026-gold-report-and-pocket-guide/"
+    evidence_level: "GRADE_HIGH"
+    recommendation_strength: "STRONG"
+    disease_scopes:
+      - "copd"
+    review_due_date: "2026-12-31"
+
+  - source_id: "gina-2025-strategy"
+    organization: "Global Initiative for Asthma"
+    document_title: "Global Strategy for Asthma Management and Prevention"
+    document_version: "2025"
+    publication_date: "2025-05-06"
+    url: "https://ginasthma.org/2025-gina-strategy-report/"
+    evidence_level: "GRADE_HIGH"
+    recommendation_strength: "STRONG"
+    disease_scopes:
+      - "asthma"
+    review_due_date: "2026-11-30"
+
+  - source_id: "guideline-consensus-global"
+    organization: "Medical Governance Board"
+    document_title: "Curated Guideline Consensus Baseline"
+    document_version: "2026.1"
+    publication_date: "2026-01-01"
+    url: "https://www.who.int/health-topics/noncommunicable-diseases"
+    evidence_level: "GUIDELINE_CONSENSUS"
+    recommendation_strength: "STRONG"
+    disease_scopes:
+      - "heart_disease"
+      - "arthritis_osteo"
+      - "arthritis_rheumatoid"
+      - "chronic_kidney_disease"
+      - "dyslipidemia"
+      - "stroke"
+    review_due_date: "2026-12-31"
+
+disease_source_priority:
+  diabetes_type2:
+    - "ada-2026-soc"
+  hypertension:
+    - "nice-ng136"
+  copd:
+    - "gold-2026-report"
+  asthma:
+    - "gina-2025-strategy"
