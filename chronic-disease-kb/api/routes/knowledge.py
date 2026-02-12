@@ -112,7 +112,13 @@ async def add_knowledge(
             "content": "Type 2 diabetes is a chronic condition...",
             "disease": "diabetes_type2",
             "category": "overview",
-            "metadata": {"source": "medical_textbook", "page": 123}
+            "metadata": {
+                "source_id": "ada-2026-soc",
+                "document_version": "2026.1",
+                "evidence_level": "GRADE_LOW",
+                "source": "medical_textbook",
+                "page": 123
+            }
         }
         ```
     """
@@ -130,6 +136,11 @@ async def add_knowledge(
             "message": "Knowledge added successfully"
         }
         
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

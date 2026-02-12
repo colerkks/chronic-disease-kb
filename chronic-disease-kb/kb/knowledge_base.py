@@ -7,6 +7,7 @@ import uuid
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 import re
+from pathlib import Path
 
 from kb.vector_store import vector_store
 from models.disease import DiseaseKnowledge
@@ -75,7 +76,103 @@ class KnowledgeBase:
             chunk_size=settings.CHUNK_SIZE,
             overlap=settings.CHUNK_OVERLAP
         )
-    
+        self._registered_source_ids: Optional[set[str]] = None
+
+    REQUIRED_GOVERNANCE_METADATA_FIELDS = (
+        "source_id",
+        "document_version",
+        "evidence_level",
+    )
+
+    SOURCE_REGISTRY_PATH = Path(__file__).resolve().parents[1] / "data" / "sources" / "source_registry.yaml"
+    SOURCE_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]{1,63}$")
+    DOCUMENT_VERSION_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,31}$")
+    SOURCE_ID_DECLARATION_PATTERN = re.compile(
+        r"source_id:\s*\"?(?P<source_id>[a-z0-9][a-z0-9-]{1,63})\"?"
+    )
+    ALLOWED_EVIDENCE_LEVELS = {
+        "GRADE_HIGH",
+        "GRADE_MODERATE",
+        "GRADE_LOW",
+        "GUIDELINE_CONSENSUS",
+        "EXPERT_OPINION",
+    }
+    FALLBACK_SOURCE_ID = "guideline-consensus-global"
+    DEFAULT_SOURCE_IDS_BY_DISEASE = {
+        "diabetes_type1": "ada-2026-soc",
+        "diabetes_type2": "ada-2026-soc",
+        "hypertension": "nice-ng136",
+        "copd": "gold-2026-report",
+        "asthma": "gina-2025-strategy",
+    }
+
+    def _get_registered_source_ids(self) -> set[str]:
+        """Load and cache allowed source IDs from the registry file."""
+        if self._registered_source_ids is not None:
+            return self._registered_source_ids
+
+        if not self.SOURCE_REGISTRY_PATH.exists():
+            raise ValueError(
+                f"Source registry not found: {self.SOURCE_REGISTRY_PATH}"
+            )
+
+        source_ids: set[str] = set()
+        content = self.SOURCE_REGISTRY_PATH.read_text(encoding="utf-8")
+        for line in content.splitlines():
+            match = self.SOURCE_ID_DECLARATION_PATTERN.search(line)
+            if match:
+                source_ids.add(match.group("source_id"))
+
+        if not source_ids:
+            raise ValueError(
+                f"No source_id entries found in registry: {self.SOURCE_REGISTRY_PATH}"
+            )
+
+        self._registered_source_ids = source_ids
+        return source_ids
+
+    def _validate_governance_metadata(self, metadata: Dict[str, Any]) -> None:
+        """Validate required governance fields before writing knowledge."""
+        missing = [
+            field
+            for field in self.REQUIRED_GOVERNANCE_METADATA_FIELDS
+            if not metadata.get(field)
+        ]
+        if missing:
+            raise ValueError(
+                "Knowledge metadata missing required governance fields: "
+                + ", ".join(missing)
+            )
+
+        source_id = str(metadata["source_id"]).strip().lower()
+        document_version = str(metadata["document_version"]).strip()
+        evidence_level = str(metadata["evidence_level"]).strip().upper()
+
+        if not self.SOURCE_ID_PATTERN.fullmatch(source_id):
+            raise ValueError(
+                "Invalid source_id format. Expected lowercase slug like 'ada-2026-soc'"
+            )
+
+        if source_id not in self._get_registered_source_ids():
+            raise ValueError(
+                f"Unknown source_id '{source_id}'. Register it in {self.SOURCE_REGISTRY_PATH}"
+            )
+
+        if not self.DOCUMENT_VERSION_PATTERN.fullmatch(document_version):
+            raise ValueError(
+                "Invalid document_version format. Use alphanumeric version like '2026.1' or 'NG136'"
+            )
+
+        if evidence_level not in self.ALLOWED_EVIDENCE_LEVELS:
+            allowed = ", ".join(sorted(self.ALLOWED_EVIDENCE_LEVELS))
+            raise ValueError(
+                f"Invalid evidence_level '{evidence_level}'. Allowed values: {allowed}"
+            )
+
+        metadata["source_id"] = source_id
+        metadata["document_version"] = document_version
+        metadata["evidence_level"] = evidence_level
+
     def add_knowledge(
         self,
         content: str,
@@ -95,6 +192,9 @@ class KnowledgeBase:
         Returns:
             Document ID
         """
+        incoming_metadata = dict(metadata or {})
+        self._validate_governance_metadata(incoming_metadata)
+
         doc_id = str(uuid.uuid4())
         
         doc_metadata = {
@@ -103,9 +203,8 @@ class KnowledgeBase:
             'doc_id': doc_id,
             'created_at': datetime.now().isoformat()
         }
-        
-        if metadata:
-            doc_metadata.update(metadata)
+
+        doc_metadata.update(incoming_metadata)
         
         # Chunk document if it's too long
         if len(content) > settings.CHUNK_SIZE:
@@ -134,6 +233,9 @@ class KnowledgeBase:
     
     def add_disease_knowledge(self, knowledge: DiseaseKnowledge) -> str:
         """Add comprehensive disease knowledge"""
+        if not knowledge.sources:
+            raise ValueError("Disease knowledge must include at least one source")
+
         doc_id = str(uuid.uuid4())
         
         # Create structured content
@@ -169,12 +271,23 @@ class KnowledgeBase:
         
         content = "\n\n".join(content_parts)
         
+        primary_source = knowledge.sources[0]
+        source_year_match = re.search(r"(19|20)\d{2}", primary_source)
+        source_year = source_year_match.group(0) if source_year_match else knowledge.last_updated.strftime("%Y")
+        source_id = self.DEFAULT_SOURCE_IDS_BY_DISEASE.get(
+            knowledge.disease_id,
+            self.FALLBACK_SOURCE_ID,
+        )
+
         metadata = {
             'disease_id': knowledge.disease_id,
             'disease_name': knowledge.name,
             'category': knowledge.category.value if hasattr(knowledge.category, 'value') else knowledge.category,
             'last_updated': knowledge.last_updated.isoformat(),
-            'sources': knowledge.sources
+            'sources': knowledge.sources,
+            'source_id': source_id,
+            'document_version': source_year,
+            'evidence_level': 'GUIDELINE_CONSENSUS'
         }
         
         return self.add_knowledge(
