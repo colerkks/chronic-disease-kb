@@ -36,7 +36,12 @@ class TestKnowledgeBase:
             content="Test medical knowledge about diabetes.",
             disease="diabetes_test",
             category="test",
-            metadata={"source": "test"}
+            metadata={
+                "source": "test",
+                "source_id": "ada-2026-soc",
+                "document_version": "2026.1",
+                "evidence_level": "GRADE_LOW"
+            }
         )
         
         assert doc_id is not None
@@ -49,7 +54,12 @@ class TestKnowledgeBase:
             content="Diabetes type 2 symptoms include frequent urination and increased thirst.",
             disease="diabetes_type2",
             category="symptoms",
-            metadata={"language": "en"}
+            metadata={
+                "language": "en",
+                "source_id": "ada-2026-soc",
+                "document_version": "2026.1",
+                "evidence_level": "GRADE_LOW"
+            }
         )
         
         # Search
@@ -72,7 +82,12 @@ class TestKnowledgeBase:
             content="Sample content for summary aggregation.",
             disease="summary_test",
             category="diagnosis",
-            metadata={"source": "unit_test"}
+            metadata={
+                "source": "unit_test",
+                "source_id": "ada-2026-soc",
+                "document_version": "2026.1",
+                "evidence_level": "GRADE_LOW"
+            }
         )
 
         summary = knowledge_base.get_metadata_summary()
@@ -80,6 +95,19 @@ class TestKnowledgeBase:
         assert "categories" in summary
         assert summary["diseases"].get("summary_test", 0) >= 1
         assert summary["categories"].get("diagnosis", 0) >= 1
+
+    def test_reject_missing_governance_metadata(self):
+        """Knowledge write should fail when required governance metadata is missing"""
+        with pytest.raises(ValueError, match="source_id"):
+            knowledge_base.add_knowledge(
+                content="Content missing governance metadata.",
+                disease="governance_test",
+                category="general",
+                metadata={
+                    "document_version": "2026.1",
+                    "evidence_level": "GRADE_LOW"
+                }
+            )
 
 
 class TestSampleData:
